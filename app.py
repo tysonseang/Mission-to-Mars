@@ -23,6 +23,6 @@ def scrape():
    mars.update({}, mars_data, upsert=True)
    return redirect('/', code=302)
 
-   # Tell Flask to run
-   if __name__ == "__main__":
+# Tell Flask to run
+if __name__ == "__main__":
    app.run()

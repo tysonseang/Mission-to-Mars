@@ -10,7 +10,7 @@ def scrape_all():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=True)
 
-       news_title, news_paragraph = mars_news(browser)
+    news_title, news_paragraph = mars_news(browser)
 
     # Run all scraping functions and store results in dictionary
     data = {
@@ -21,8 +21,12 @@ def scrape_all():
         "last_modified": dt.datetime.now()
     }
 
+    # Stop webdriver and return data
+    browser.quit()
+    return data
 
-# ### Featured Articles
+
+# Featured Articles
 
 def mars_news(browser):
 
@@ -54,7 +58,7 @@ def mars_news(browser):
     return news_title, news_p
 
 
-# ### Featured Images
+# Featured Images
 
 def featured_image(browser):
 
@@ -84,7 +88,7 @@ def featured_image(browser):
     return img_url
 
 
-# ### Featured Facts
+# Featured Facts
 
 def mars_facts():
     # Add try/except for error handling
@@ -100,10 +104,11 @@ def mars_facts():
     df.set_index('description', inplace=True)
 
     # Convert df to html format, add bootstrap
-    df.to_html()
+    return df.to_html(classes="table table-striped")
 
-# End automated browsing session
-browser.quit()
+if __name__ == "__main__":
 
+    # If running as script, print scraped data
+    print(scrape_all())
 
 
