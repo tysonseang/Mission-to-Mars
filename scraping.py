@@ -18,7 +18,8 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
-        "last_modified": dt.datetime.now()
+        "last_modified": dt.datetime.now(),
+        "hemisphere_data": hemisphere_data(browser)
     }
 
     # Stop webdriver and return data
@@ -106,9 +107,48 @@ def mars_facts():
     # Convert df to html format, add bootstrap
     return df.to_html(classes="table table-striped")
 
+
+
+# Hemisphere Images
+
+def hemisphere_data(browser):
+    
+    #  Use browser to visit the URL 
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    #  Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+
+    # Write code to retrieve the image urls and titles for each hemisphere.
+
+    # Find the hemisphere image link and click on it 
+    hemisphere_img = browser.find_by_css('a.product-item img')
+    print(len(hemisphere_img))
+    
+    for i in range(len(hemisphere_img)):
+        hemispheres = {}
+        browser.find_by_css('a.product-item img')[i].click()
+
+        # Parse the image title
+        hemisphere_img_title = browser.find_by_css('h2.title').text
+        hemispheres['title'] = hemisphere_img_title
+        
+        
+        # Use "Sample" link to access url add-on and add it to homepage root url
+        sample = browser.find_by_css('li a')[0]['href']
+        hemispheres['img_url'] = sample
+
+        hemisphere_image_urls.append(hemispheres)
+
+        # Use browser back to return to homepage to access next image link
+        browser.back()
+
+    return hemisphere_image_urls
+
+
+
 if __name__ == "__main__":
 
     # If running as script, print scraped data
     print(scrape_all())
-
-
